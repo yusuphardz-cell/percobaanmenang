@@ -3,73 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slot Gacor Simulator - Pro Edition</title>
+    <title>NICEWD - Online Terbaik Dan Terpercaya</title>
+    <script src="https://tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cloudflare.com">
     <style>
-        body { font-family: 'Arial', sans-serif; background-color: #0b0c10; color: #66fcf1; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
-        .slot-machine { background: #1f2833; padding: 40px; border-radius: 20px; border: 5px solid #45a29e; text-align: center; box-shadow: 0 0 30px #45a29e; position: relative; }
-        .reels { display: flex; gap: 20px; justify-content: center; margin: 30px 0; perspective: 1000px; }
-        .reel { width: 100px; height: 120px; background: #0b0c10; border: 3px solid #66fcf1; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 4rem; overflow: hidden; transition: transform 0.1s; }
+        body { background-color: #0b0f05; color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-bottom: 70px; }
+        .gold-gradient { background: linear-gradient(180deg, #f3d078 0%, #b38b2d 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-gold { background: linear-gradient(180deg, #f3d078 0%, #b38b2d 100%); color: #000; font-weight: bold; }
+        .btn-blue { background: linear-gradient(180deg, #3498db 0%, #2980b9 100%); color: #fff; font-weight: bold; }
+        .sidebar-item { background: rgba(40, 40, 40, 0.8); border: 1px solid #444; transition: 0.3s; }
+        .sidebar-item.active { background: linear-gradient(180deg, #e67e22 0%, #d35400 100%); border-color: #f39c12; }
+        .game-card { background: #1a1a1a; border-radius: 12px; overflow: hidden; position: relative; }
+        .game-label { background: #e74c3c; color: white; text-align: center; font-size: 10px; padding: 4px 0; font-weight: bold; text-transform: uppercase; }
+        .marquee-container { background: rgba(0, 255, 0, 0.1); border: 1px solid rgba(0, 255, 0, 0.3); color: #00ff00; overflow: hidden; white-space: nowrap; padding: 2px 10px; border-radius: 10px; font-size: 10px; }
+        .marquee-text { display: inline-block; animation: marquee 15s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
         
-        /* Animasi Berputar */
-        .spinning { animation: blurSpin 0.1s infinite linear; }
-        @keyframes blurSpin {
-            0% { filter: blur(0px); transform: translateY(-5px); }
-            50% { filter: blur(4px); transform: translateY(5px); }
-            100% { filter: blur(0px); transform: translateY(-5px); }
+        /* Slot Animation */
+        .reel-spin { animation: blurSpin 0.1s infinite linear; }
+        @keyframes blurSpin { 
+            0% { filter: blur(0px); transform: translateY(-2px); }
+            50% { filter: blur(2px); transform: translateY(2px); }
+            100% { filter: blur(0px); transform: translateY(-2px); }
         }
-
-        .stats { font-size: 1.5rem; margin-bottom: 10px; color: #fff; }
-        .controls { display: flex; flex-direction: column; gap: 15px; }
-        input { background: #0b0c10; border: 2px solid #45a29e; color: #66fcf1; padding: 10px; border-radius: 5px; text-align: center; font-size: 1.2rem; }
-        button { padding: 15px; cursor: pointer; border: none; border-radius: 5px; font-weight: bold; font-size: 1.1rem; text-transform: uppercase; transition: 0.2s; }
-        .btn-spin { background-color: #66fcf1; color: #0b0c10; box-shadow: 0 4px #45a29e; }
-        .btn-spin:active { transform: translateY(4px); box-shadow: none; }
-        .btn-auto { background-color: #45a29e; color: white; }
-        #message { margin-top: 20px; font-weight: bold; height: 24px; color: #c5c6c7; }
-        .jackpot-flash { animation: flash 0.5s infinite alternate; }
-        @keyframes flash { from { background: #1f2833; } to { background: #66fcf1; } }
+        .jackpot-glow { box-shadow: 0 0 20px #f3d078; border-color: #f3d078 !important; }
     </style>
 </head>
 <body>
 
-    <div class="slot-machine" id="machine">
-        <div class="stats">SALDO: Rp <span id="saldo">10000</span></div>
-        
-        <div class="reels">
-            <div class="reel" id="reel1">🍒</div>
-            <div class="reel" id="reel2">🍒</div>
-            <div class="reel" id="reel3">🍒</div>
+    <!-- Header -->
+    <header class="p-4 flex flex-col gap-3">
+        <div class="flex justify-between items-center">
+            <h1 class="text-3xl font-black italic tracking-tighter gold-gradient">NICEWD</h1>
+            <div class="flex gap-2">
+                <button class="btn-blue px-4 py-1 rounded text-sm shadow-lg">Daftar</button>
+            </div>
         </div>
-
-        <div id="message">TEKAN SPIN UNTUK CUAN!</div>
-
-        <div class="controls">
-            <input type="number" id="betInput" value="500" min="100" step="100">
-            <button class="btn-spin" onclick="play()">SPIN</button>
-            <button class="btn-auto" onclick="toggleAuto()">AUTO SPIN</button>
+        <div class="flex gap-2 items-center">
+            <input type="text" placeholder="Username" class="flex-1 bg-gray-800 rounded py-2 px-3 text-xs outline-none border border-gray-700">
+            <input type="password" placeholder="Password" class="flex-1 bg-gray-800 rounded py-2 px-3 text-xs outline-none border border-gray-700">
+            <button class="btn-gold px-4 py-2 rounded text-xs">Masuk</button>
         </div>
+    </header>
+
+    <div class="flex px-2 gap-2">
+        <!-- Sidebar -->
+        <aside class="w-16 flex flex-col gap-2">
+            <div class="sidebar-item active flex flex-col items-center justify-center py-2 rounded-lg">
+                <i class="fa fa-fire text-white text-xs mb-1"></i>
+                <span class="text-[9px]">HOT</span>
+            </div>
+            <div class="sidebar-item flex flex-col items-center justify-center py-2 rounded-lg opacity-60">
+                <i class="fa fa-gamepad text-xs mb-1"></i>
+                <span class="text-[9px]">SLOT</span>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 pb-4">
+            
+            <!-- MESIN SLOT SIMULATOR -->
+            <div id="slot-box" class="bg-[#1a1a1a] p-3 rounded-xl border border-yellow-600/30 mb-4 shadow-lg transition-all duration-500">
+                <div class="flex justify-between items-center mb-2 px-1">
+                    <div class="flex flex-col">
+                        <span class="text-[9px] text-gray-400 uppercase">Saldo Anda</span>
+                        <span class="text-sm font-bold text-yellow-500">Rp <span id="saldo">10.000</span></span>
+                    </div>
+                    <div class="marquee-container flex-1 mx-2">
+                        <div class="marquee-text font-mono">Pola Gacor Hari Ini: Spin 10x Manual - Turbo 20x - Auto 50x | RTP 96.8% Locked</div>
+                    </div>
+                </div>
+                
+                <div class="flex gap-2 justify-center my-3">
+                    <div id="reel1" class="w-14 h-16 bg-black rounded flex items-center justify-center text-3xl border border-gray-700">🍒</div>
+                    <div id="reel2" class="w-14 h-16 bg-black rounded flex items-center justify-center text-3xl border border-gray-700">🍒</div>
+                    <div id="reel3" class="w-14 h-16 bg-black rounded flex items-center justify-center text-3xl border border-gray-700">🍒</div>
+                </div>
+
+                <div class="flex gap-2">
+                    <input type="number" id="betInput" value="500" class="w-1/3 bg-gray-900 text-white text-center rounded border border-gray-700 text-xs py-2">
+                    <button onclick="playSlot()" id="btnSpin" class="flex-1 btn-gold rounded uppercase text-[10px] tracking-widest py-2">Spin</button>
+                </div>
+                <div id="message" class="text-[10px] text-center mt-2 font-bold text-gray-400 h-4">SIAP MENANG?</div>
+            </div>
+
+            <!-- Games Grid -->
+            <div class="grid grid-cols-2 gap-2">
+                <div class="game-card shadow-lg shadow-yellow-900/20">
+                    <img src="https://unsplash.com" class="w-full h-24 object-cover">
+                    <div class="game-label">MAHJONG WAYS</div>
+                </div>
+                <div class="game-card">
+                    <img src="https://unsplash.com" class="w-full h-24 object-cover">
+                    <div class="game-label">GATES OF OLYMPUS</div>
+                </div>
+            </div>
+        </main>
     </div>
+
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav">
+        <div class="flex flex-col items-center"><i class="fa fa-home nav-icon text-yellow-500"></i><span class="nav-label">Home</span></div>
+        <div class="flex flex-col items-center"><i class="fa fa-gift nav-icon"></i><span class="nav-label">Promosi</span></div>
+        <div class="flex flex-col items-center"><i class="fa fa-comments nav-icon"></i><span class="nav-label">Live Chat</span></div>
+    </nav>
 
     <script>
         let saldo = 10000;
-        let isAuto = false;
         const simbols = ['🍒', '🍋', '🔔', '💎', '7️⃣'];
-        const bobot = [55, 25, 14, 5, 1];
+        const bobot =; // Peluang 2% JP 777
         const payout = { '🍒': 5, '🍋': 10, '🔔': 20, '💎': 50, '7️⃣': 100 };
+        let isSpinning = false;
 
-        // Audio Synth (Tanpa File Mp3)
+        // Audio Engine (Synth)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playSound(freq, type, duration) {
+        function playTone(f, t, d) {
             const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + duration);
+            const g = audioCtx.createGain();
+            osc.type = t; osc.frequency.value = f;
+            g.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + d);
+            osc.connect(g); g.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + d);
         }
 
         function getSymbol() {
@@ -82,60 +137,54 @@
             }
         }
 
-        async function play() {
+        async function playSlot() {
+            if (isSpinning) return;
             const bet = parseInt(document.getElementById('betInput').value);
             if (saldo < bet) {
-                alert("Saldo Rungkad! Segera isi ulang.");
-                isAuto = false;
+                document.getElementById('message').innerText = "SALDO HABIS!";
                 return;
             }
 
+            isSpinning = true;
             saldo -= bet;
-            document.getElementById('saldo').innerText = saldo;
-            document.getElementById('message').innerText = "Memutar...";
-            document.getElementById('machine').classList.remove('jackpot-flash');
+            document.getElementById('saldo').innerText = saldo.toLocaleString('id-ID');
+            document.getElementById('message').innerText = "MENUNGGU HASIL...";
+            document.getElementById('slot-box').classList.remove('jackpot-glow');
 
-            // Start Animasi
             const reels = [document.getElementById('reel1'), document.getElementById('reel2'), document.getElementById('reel3')];
-            reels.forEach(r => r.classList.add('spinning'));
             
-            // Sound effect spin
-            let spinSound = setInterval(() => playSound(150, 'square', 0.05), 100);
+            // Start Animasi & Suara
+            reels.forEach(r => r.classList.add('reel-spin'));
+            let sfx = setInterval(() => playTone(200, 'sine', 0.05), 100);
 
-            // Delay simulasi putaran
-            await new Promise(r => setTimeout(r, 800));
-            
-            clearInterval(spinSound);
-            reels.forEach(r => r.classList.remove('spinning'));
+            setTimeout(() => {
+                clearInterval(sfx);
+                reels.forEach(r => r.classList.remove('reel-spin'));
+                
+                let hasil = [getSymbol(), getSymbol(), getSymbol()];
+                reels.forEach((r, i) => r.innerText = hasil[i]);
 
-            // Hasil
-            let hasil = [getSymbol(), getSymbol(), getSymbol()];
-            let menang = 0;
-            let pesan = "Zonk! Coba lagi.";
+                let menang = 0;
+                if (hasil === hasil && hasil === hasil) {
+                    menang = bet * payout[hasil];
+                    document.getElementById('message').innerText = "JACKPOT! +Rp" + menang.toLocaleString('id-ID');
+                    document.getElementById('message').className = "text-[10px] text-center mt-2 font-bold text-yellow-500 h-4";
+                    document.getElementById('slot-box').classList.add('jackpot-glow');
+                    playTone(600, 'square', 0.5);
+                } else if (hasil === hasil || hasil === hasil || hasil === hasil) {
+                    menang = Math.floor(bet * 1.2);
+                    document.getElementById('message').innerText = "MENANG! +Rp" + menang.toLocaleString('id-ID');
+                    document.getElementById('message').className = "text-[10px] text-center mt-2 font-bold text-blue-400 h-4";
+                    playTone(400, 'triangle', 0.2);
+                } else {
+                    document.getElementById('message').innerText = "ZONK! COBA LAGI";
+                    document.getElementById('message').className = "text-[10px] text-center mt-2 font-bold text-gray-500 h-4";
+                }
 
-            if (hasil[0] === hasil[1] && hasil[1] === hasil[2]) {
-                menang = bet * payout[hasil[0]];
-                pesan = `JACKPOT ${hasil[0]}! +Rp${menang}`;
-                document.getElementById('machine').classList.add('jackpot-flash');
-                playSound(600, 'triangle', 0.5); // Win sound
-            } else if (hasil[0] === hasil[1] || hasil[1] === hasil[2] || hasil[0] === hasil[2]) {
-                menang = Math.floor(bet * 1.2);
-                pesan = `Nice! Dapat Rp${menang}`;
-                playSound(400, 'sine', 0.2);
-            }
-
-            saldo += menang;
-            reels.forEach((r, i) => r.innerText = hasil[i]);
-            document.getElementById('saldo').innerText = saldo;
-            document.getElementById('message').innerText = pesan;
-        }
-
-        async function toggleAuto() {
-            isAuto = !isAuto;
-            while(isAuto) {
-                await play();
-                await new Promise(r => setTimeout(r, 1000));
-            }
+                saldo += menang;
+                document.getElementById('saldo').innerText = saldo.toLocaleString('id-ID');
+                isSpinning = false;
+            }, 1200);
         }
     </script>
 </body>
