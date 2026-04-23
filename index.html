@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slot Gacor Simulator - Pro Edition</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background-color: #0b0c10; color: #66fcf1; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
+        .slot-machine { background: #1f2833; padding: 40px; border-radius: 20px; border: 5px solid #45a29e; text-align: center; box-shadow: 0 0 30px #45a29e; position: relative; }
+        .reels { display: flex; gap: 20px; justify-content: center; margin: 30px 0; perspective: 1000px; }
+        .reel { width: 100px; height: 120px; background: #0b0c10; border: 3px solid #66fcf1; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 4rem; overflow: hidden; transition: transform 0.1s; }
+        
+        /* Animasi Berputar */
+        .spinning { animation: blurSpin 0.1s infinite linear; }
+        @keyframes blurSpin {
+            0% { filter: blur(0px); transform: translateY(-5px); }
+            50% { filter: blur(4px); transform: translateY(5px); }
+            100% { filter: blur(0px); transform: translateY(-5px); }
+        }
+
+        .stats { font-size: 1.5rem; margin-bottom: 10px; color: #fff; }
+        .controls { display: flex; flex-direction: column; gap: 15px; }
+        input { background: #0b0c10; border: 2px solid #45a29e; color: #66fcf1; padding: 10px; border-radius: 5px; text-align: center; font-size: 1.2rem; }
+        button { padding: 15px; cursor: pointer; border: none; border-radius: 5px; font-weight: bold; font-size: 1.1rem; text-transform: uppercase; transition: 0.2s; }
+        .btn-spin { background-color: #66fcf1; color: #0b0c10; box-shadow: 0 4px #45a29e; }
+        .btn-spin:active { transform: translateY(4px); box-shadow: none; }
+        .btn-auto { background-color: #45a29e; color: white; }
+        #message { margin-top: 20px; font-weight: bold; height: 24px; color: #c5c6c7; }
+        .jackpot-flash { animation: flash 0.5s infinite alternate; }
+        @keyframes flash { from { background: #1f2833; } to { background: #66fcf1; } }
+    </style>
+</head>
+<body>
+
+    <div class="slot-machine" id="machine">
+        <div class="stats">SALDO: Rp <span id="saldo">10000</span></div>
+        
+        <div class="reels">
+            <div class="reel" id="reel1">🍒</div>
+            <div class="reel" id="reel2">🍒</div>
+            <div class="reel" id="reel3">🍒</div>
+        </div>
+
+        <div id="message">TEKAN SPIN UNTUK CUAN!</div>
+
+        <div class="controls">
+            <input type="number" id="betInput" value="500" min="100" step="100">
+            <button class="btn-spin" onclick="play()">SPIN</button>
+            <button class="btn-auto" onclick="toggleAuto()">AUTO SPIN</button>
+        </div>
+    </div>
+
+    <script>
+        let saldo = 10000;
+        let isAuto = false;
+        const simbols = ['🍒', '🍋', '🔔', '💎', '7️⃣'];
+        const bobot = [55, 25, 14, 5, 1];
+        const payout = { '🍒': 5, '🍋': 10, '🔔': 20, '💎': 50, '7️⃣': 100 };
+
+        // Audio Synth (Tanpa File Mp3)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(freq, type, duration) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        function getSymbol() {
+            let total = bobot.reduce((a, b) => a + b, 0);
+            let r = Math.random() * total;
+            let sum = 0;
+            for (let i = 0; i < simbols.length; i++) {
+                sum += bobot[i];
+                if (r <= sum) return simbols[i];
+            }
+        }
+
+        async function play() {
+            const bet = parseInt(document.getElementById('betInput').value);
+            if (saldo < bet) {
+                alert("Saldo Rungkad! Segera isi ulang.");
+                isAuto = false;
+                return;
+            }
+
+            saldo -= bet;
+            document.getElementById('saldo').innerText = saldo;
+            document.getElementById('message').innerText = "Memutar...";
+            document.getElementById('machine').classList.remove('jackpot-flash');
+
+            // Start Animasi
+            const reels = [document.getElementById('reel1'), document.getElementById('reel2'), document.getElementById('reel3')];
+            reels.forEach(r => r.classList.add('spinning'));
+            
+            // Sound effect spin
+            let spinSound = setInterval(() => playSound(150, 'square', 0.05), 100);
+
+            // Delay simulasi putaran
+            await new Promise(r => setTimeout(r, 800));
+            
+            clearInterval(spinSound);
+            reels.forEach(r => r.classList.remove('spinning'));
+
+            // Hasil
+            let hasil = [getSymbol(), getSymbol(), getSymbol()];
+            let menang = 0;
+            let pesan = "Zonk! Coba lagi.";
+
+            if (hasil[0] === hasil[1] && hasil[1] === hasil[2]) {
+                menang = bet * payout[hasil[0]];
+                pesan = `JACKPOT ${hasil[0]}! +Rp${menang}`;
+                document.getElementById('machine').classList.add('jackpot-flash');
+                playSound(600, 'triangle', 0.5); // Win sound
+            } else if (hasil[0] === hasil[1] || hasil[1] === hasil[2] || hasil[0] === hasil[2]) {
+                menang = Math.floor(bet * 1.2);
+                pesan = `Nice! Dapat Rp${menang}`;
+                playSound(400, 'sine', 0.2);
+            }
+
+            saldo += menang;
+            reels.forEach((r, i) => r.innerText = hasil[i]);
+            document.getElementById('saldo').innerText = saldo;
+            document.getElementById('message').innerText = pesan;
+        }
+
+        async function toggleAuto() {
+            isAuto = !isAuto;
+            while(isAuto) {
+                await play();
+                await new Promise(r => setTimeout(r, 1000));
+            }
+        }
+    </script>
+</body>
+</html>
